@@ -1,0 +1,44 @@
+<%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/cart.css">
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs') %>
+        <main>
+            <ul class="cart__item-list">
+                    <% products.forEach(p => { %>
+                        <li class="cart__item">
+                            <h1><%= p.productId.title %></h1>
+                            <h2>Quantity: <%= p.quantity %></h2>
+                        </li>
+                    <% }) %>
+                </ul>
+                <div class="centered">
+                    <h2>Total Price: $<%= total %></h2>
+                </div>
+                <div class="centered">
+                    <button id="order-btn" class="btn">ORDER</button>
+                    <script src="https://js.stripe.com/v3/"></script>
+                    <script>
+                        // Initialize Stripe with your publishable key
+                        const stripe = Stripe('<  -- Stripe publishable key removed for privacy reasons -->');
+                        const orderBtn = document.getElementById('order-btn');
+                        console.log('Checkout page loaded. stripe object:', typeof stripe !== 'undefined');
+                        console.log('sessionId from server:', '<%= sessionId %>');
+                        orderBtn.addEventListener('click', function() {
+                            stripe.redirectToCheckout({
+                                sessionId: '<%= sessionId %>',
+                            }).then(function (result) {
+                                if (result.error) {
+                                    console.error('Stripe redirect error:', result.error.message);
+                                    alert('Payment redirect failed: ' + result.error.message);
+                                }
+                            }).catch(function (err) {
+                                console.error('redirectToCheckout rejected:', err);
+                                alert('Unexpected error: ' + err.message);
+                            });
+                        });
+                    </script>
+                </div>
+        </main>
+        <%- include('../includes/end.ejs') %>
