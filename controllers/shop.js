@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 // stripe secret key removed for privacy reasons
-const stripe = require("stripe")("<Secret key removed for privacy reasons>");
+const stripe = require("stripe")("process.env.STRIPE_SECRET_KEY");
 
 const PDFDocument = require("pdfkit");
 
